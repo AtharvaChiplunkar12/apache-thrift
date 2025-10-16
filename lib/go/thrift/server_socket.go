@@ -110,7 +110,9 @@ func (p *TServerSocket) Open() error {
 }
 
 func (p *TServerSocket) Addr() net.Addr {
-	if p.listener != nil {
+	p.mu.RLock()
+	defer p.mu.RUnlock()
+	if p.IsListening() {
 		return p.listener.Addr()
 	}
 	return p.addr
